@@ -1,56 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>JS Reference VS Copy</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>JS Reference VS Copy</title>
+  </head>
+  <body>
+    <script>
+      // start with strings, numbers and booleans
+      let age = 100
+      let age2 = age
+      console.log(age, age2) // will log 100, 100
+      age = 200
+      console.log(age, age2) // will log 200, 100
 
-  <script>
-    // start with strings, numbers and booleans
+      let name = 'tine'
+      let name2 = name
+      console.log(name, name2) // will log tine, tine
+      name = 'tiney'
+      console.log(name, name2) // will log tiney, tine
 
-    // Let's say we have an array
-    const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+      // Let's say we have an array
+      const players = ['Wes', 'Sarah', 'Ryan', 'Poppy']
 
-    // and we want to make a copy of it.
+      // and we want to make a copy of it.
+      const team = players
+      console.log(players, team)
 
-    // You might think we can just do something like this:
+      // You might think we can just do something like this:
+      // team[3] = 'Lux'
 
-    // however what happens when we update that array?
+      // however what happens when we update that array?
 
-    // now here is the problem!
+      // now here is the problem!
 
-    // oh no - we have edited the original array too!
+      // oh no - we have edited the original array too!
 
-    // Why? It's because that is an array reference, not an array copy. They both point to the same array!
+      // Why? It's because that is an array reference, not an array copy. They both point to the same array!
 
-    // So, how do we fix this? We take a copy instead!
+      // So, how do we fix this? We take a copy instead!
+      const team2 = players.slice()
 
-    // one way
+      // one way
 
-    // or create a new array and concat the old one in
+      // or create a new array and concat the old one in
+      const team3 = [].concat(players)
 
-    // or use the new ES6 Spread
+      // or use the new ES6 Spread
+      const team4 = [...players]
 
-    // now when we update it, the original one isn't changed
+      const team5 = Array.from(players)
 
-    // The same thing goes for objects, let's say we have a person object
+      // now when we update it, the original one isn't changed
 
-    // with Objects
-    const person = {
-      name: 'Wes Bos',
-      age: 80
-    };
+      // The same thing goes for objects, let's say we have a person object
 
-    // and think we make a copy:
+      // with Objects
+      const person = {
+        name: 'Wes Bos',
+        age: 80,
+      }
 
-    // how do we take a copy instead?
+      // and think we make a copy:
+      // const captain = person
+      // captain.number = 99 // will also change the person object
 
-    // We will hopefully soon see the object ...spread
+      // how do we take a copy instead?
+      const captain2 = Object.assign({}, person)
 
-    // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+      // we can also use the object ...spread
+      const captain3 = { ...person }
+      captain3.age = 99
 
-  </script>
+      // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+      const tine = {
+        name: 'Tine',
+        age: 29,
+        social: {
+          twitter: '@tine',
+          linkedin: '@tiney',
+        },
+      }
 
-</body>
+      console.clear()
+      console.log(tine)
+
+      const tine2 = { ...tine }
+      const tine2 = Object.assign({}, tine)
+
+      // when we do this now it won't affect our original object
+      tine2.age = 'wowza'
+
+      // however, if we do the following, it will also change the original object because neither the spread operator nor Object.assign lets you make a copy of nested items
+      // tine2.social.twitter = '@coolwoman'
+      // console.log(tine.social.twitter) // will print '@coolwoman'
+
+      // the solution? The following is solving this issue, but you should be careful when using it since it can have an impact on performanc
+      const tine3 = JSON.parse(JSON.stringify(tine))
+      tine3.social.twitter = '@superwoman'
+      console.log(tine.social.twitter) // will print '@tine' because the original object has not been modified
+    </script>
+  </body>
 </html>
